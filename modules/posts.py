@@ -1,5 +1,6 @@
 import sys
 from os import execl
+from random import choice
 from traceback import format_exc
 
 from discord import Embed, utils
@@ -21,8 +22,11 @@ class Posts(Cog):
     async def messages(self, name, value):
         try:
             for uid in [x for x in SET["Уведомления"].values()]:
-                await self.BOT.get_user(uid).send(embed=Embed(
-                    title="Сообщение!", color=0x008000).add_field(name=name, value=value))
+                try:
+                    await self.BOT.get_user(uid).send(embed=Embed(
+                        title="Сообщение!", color=0x008000).add_field(name=name, value=value))
+                except Exception:
+                    pass
             await self.BOT.get_channel(975477956673675354).send(embed=Embed(
                 title="Сообщение!", color=0x008000).add_field(name=name, value=value))
         except Exception:
@@ -31,8 +35,11 @@ class Posts(Cog):
     async def alerts(self, name, value):
         try:
             for uid in [x for x in SET["Уведомления"].values()]:
-                await self.BOT.get_user(uid).send(embed=Embed(
-                    title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
+                try:
+                    await self.BOT.get_user(uid).send(embed=Embed(
+                        title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
+                except Exception:
+                    pass
             await self.BOT.get_channel(975477956673675354).send(embed=Embed(
                 title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
         except Exception:
@@ -41,8 +48,11 @@ class Posts(Cog):
     async def errors(self, name, value, reset=0):
         try:
             for uid in [x for x in SET["Уведомления"].values()]:
-                await self.BOT.get_user(uid).send(embed=Embed(
-                    title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
+                try:
+                    await self.BOT.get_user(uid).send(embed=Embed(
+                        title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
+                except Exception:
+                    pass
             await self.BOT.get_channel(975477956673675354).send(embed=Embed(
                 title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
             if reset == 1:
@@ -53,21 +63,23 @@ class Posts(Cog):
     @loop(count=1)
     async def posts(self):
         try:
-            channel, rid1, rid2 = 974901059380203570, 974764853707280384, 974920743366320188
+            styles = [ButtonStyle.green, ButtonStyle.blue, ButtonStyle.red, ButtonStyle.gray]
+            channel, rid1, rid2, rid3 = 974901059380203570, 974764853707280384, 974920743366320188, 979770070735675432
             try:
                 rules = await self.BOT.get_channel(channel).fetch_message(
                     int(DB.server.channels.find_one({"_id": channel})["Роли"]))
                 await rules.delete()
             except Exception:
                 pass
-            e1 = Embed(title="Возми себе роль:", color=0x008000, description=f"<@&{rid1}> - доступ в игровой чат.\n\n"
-                                                                             f"<@&{rid2}> - доступ к 18+ чату.")
+            e1 = Embed(title="Возми себе роль:", color=0x008000,
+                       description=f"<@&{rid1}> - доступ в <#975369937210195978>.\n\n"
+                                   f"<@&{rid2}> - доступ в <#974767244670296105>.\n\n"
+                                   f"<@&{rid3}> - доступ в <#979769343036502026>.\n\n")
             e1.set_footer(text=SET["Футер"]["Текст"], icon_url=SET["Футер"]["Ссылка"])
             rulesid = await self.BOT.get_channel(channel).send(embed=e1, components=[[
-                Button(label=DB.server.roles.find_one({"_id": rid1})["Название"], style=ButtonStyle.blue,
-                       id=str(rid1)),
-                Button(label=DB.server.roles.find_one({"_id": rid2})["Название"], style=ButtonStyle.blue,
-                       id=str(rid2))]])
+                Button(label=DB.server.roles.find_one({"_id": rid1})["Название"], style=choice(styles), id=str(rid1)),
+                Button(label=DB.server.roles.find_one({"_id": rid2})["Название"], style=choice(styles), id=str(rid2)),
+                Button(label=DB.server.roles.find_one({"_id": rid3})["Название"], style=choice(styles), id=str(rid3))]])
             DB.server.channels.update_one({"_id": channel}, {"$set": {"Роли": rulesid.id}})
         except Exception:
             await self.errors("Пост Роли:", format_exc())

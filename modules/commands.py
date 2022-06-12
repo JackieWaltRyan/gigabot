@@ -19,8 +19,11 @@ class Commands(Cog):
     async def messages(self, name, value):
         try:
             for uid in [x for x in SET["Уведомления"].values()]:
-                await self.BOT.get_user(uid).send(embed=Embed(
-                    title="Сообщение!", color=0x008000).add_field(name=name, value=value))
+                try:
+                    await self.BOT.get_user(uid).send(embed=Embed(
+                        title="Сообщение!", color=0x008000).add_field(name=name, value=value))
+                except Exception:
+                    pass
             await self.BOT.get_channel(975477956673675354).send(embed=Embed(
                 title="Сообщение!", color=0x008000).add_field(name=name, value=value))
         except Exception:
@@ -29,8 +32,11 @@ class Commands(Cog):
     async def alerts(self, name, value):
         try:
             for uid in [x for x in SET["Уведомления"].values()]:
-                await self.BOT.get_user(uid).send(embed=Embed(
-                    title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
+                try:
+                    await self.BOT.get_user(uid).send(embed=Embed(
+                        title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
+                except Exception:
+                    pass
             await self.BOT.get_channel(975477956673675354).send(embed=Embed(
                 title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
         except Exception:
@@ -39,8 +45,11 @@ class Commands(Cog):
     async def errors(self, name, value, reset=0):
         try:
             for uid in [x for x in SET["Уведомления"].values()]:
-                await self.BOT.get_user(uid).send(embed=Embed(
-                    title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
+                try:
+                    await self.BOT.get_user(uid).send(embed=Embed(
+                        title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
+                except Exception:
+                    pass
             await self.BOT.get_channel(975477956673675354).send(embed=Embed(
                 title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
             if reset == 1:

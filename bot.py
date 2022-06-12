@@ -21,8 +21,11 @@ SET = DB.server.settings.find_one({"_id": "Настройки"})
 async def messages(name, value):
     try:
         for uid in [x for x in SET["Уведомления"].values()]:
-            await BOT.get_user(uid).send(embed=Embed(
-                title="Сообщение!", color=0x008000).add_field(name=name, value=value))
+            try:
+                await BOT.get_user(uid).send(embed=Embed(
+                    title="Сообщение!", color=0x008000).add_field(name=name, value=value))
+            except Exception:
+                pass
         await BOT.get_channel(975477956673675354).send(embed=Embed(
             title="Сообщение!", color=0x008000).add_field(name=name, value=value))
     except Exception:
@@ -32,8 +35,11 @@ async def messages(name, value):
 async def alerts(name, value):
     try:
         for uid in [x for x in SET["Уведомления"].values()]:
-            await BOT.get_user(uid).send(embed=Embed(
-                title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
+            try:
+                await BOT.get_user(uid).send(embed=Embed(
+                    title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
+            except Exception:
+                pass
         await BOT.get_channel(975477956673675354).send(embed=Embed(
             title="Уведомление!", color=0xFFA500).add_field(name=name, value=value))
     except Exception:
@@ -43,8 +49,11 @@ async def alerts(name, value):
 async def errors(name, value, reset=0):
     try:
         for uid in [x for x in SET["Уведомления"].values()]:
-            await BOT.get_user(uid).send(embed=Embed(
-                title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
+            try:
+                await BOT.get_user(uid).send(embed=Embed(
+                    title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
+            except Exception:
+                pass
         await BOT.get_channel(975477956673675354).send(embed=Embed(
             title="Ошибка!", color=0xFF0000).add_field(name=name, value=value))
         if reset == 1:
@@ -187,7 +196,7 @@ async def on_member_join(member):
         e.set_thumbnail(url=member.avatar_url)
         e.set_image(url=choice(DB.server.settings.find_one({"_id": "Настройки"})["Арты приветствия"]))
         e.set_footer(text=SET["Футер"]["Текст"], icon_url=SET["Футер"]["Ссылка"])
-        await BOT.get_channel(974755169311002636).send(embed=e)
+        await BOT.get_channel(981205101882536006).send(embed=e)
         user = DB.server.users.find_one({"_id": member.id})
         if user is None:
             DB.server.users.insert_one({"_id": member.id,
